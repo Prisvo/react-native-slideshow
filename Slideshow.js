@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 15
   },
   indicator: {
     margin: 3,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   layoutText: {
     position: 'absolute',
     paddingHorizontal: 15,
-    height: 120,
+    height: 130,
     bottom: 0,
     left: 0,
     right: 0,
@@ -60,14 +60,28 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 21,
     color: 'white',
   },
   textCaption: {
     fontWeight: '400',
-    fontSize: 10,
+    fontSize: 16,
     color: 'white',
-  }
+  },
+  selectCheck: {
+    color: '#fff',
+    fontSize: 12,
+    height: 50,
+    width: 50,
+    borderRadius: 50/2,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    textAlign: 'center',
+    paddingTop: 16
+  },
+
+  selectClose: {
+  },
+
 });
 
 export default class Slideshow extends Component {
@@ -219,9 +233,20 @@ export default class Slideshow extends Component {
                     </TouchableOpacity>);
                   })}
                 </View>
-                {/* END SECTION INDICATOR */}
-                {image.caption === undefined ? null : <Text style={styles.textCaption}>{image.caption}</Text>}
-                {image.title === undefined ? null : <Text style={styles.textTitle}>{image.title}</Text>}
+
+                <View style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                  <View>
+                    {/* END SECTION INDICATOR */}
+                    {image.caption === undefined ? null : <Text style={styles.textCaption}>{image.caption}</Text>}
+                    {image.title === undefined ? null : <Text style={styles.textTitle}>{image.title}</Text>}
+                  </View>
+
+                  <TouchableOpacity
+                             onPress={() => this.props.action() }
+                             style={styles.selectClose}>
+                     <Text style={styles.selectCheck}>Select</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             );
             const imageComponent = (
@@ -265,6 +290,7 @@ export default class Slideshow extends Component {
             { left: 10 },
           ]}>
           <TouchableOpacity
+          style={{width: 50 }}
             onPress={() => this._prev()}>
             {
               this.props.arrowLeft
@@ -279,6 +305,7 @@ export default class Slideshow extends Component {
             { right: 10 },
           ]}>
           <TouchableOpacity
+            style={{width: 50}}
             onPress={() => this._next()}>
             {
               this.props.arrowRight
@@ -293,7 +320,7 @@ export default class Slideshow extends Component {
 
 Slideshow.defaultProps = {
   height: 200,
-  indicatorSize: 70,
+  indicatorSize: 100,
   indicatorColor: '#CCCCCC',
   indicatorSelectedColor: '#FFFFFF',
   scrollEnabled: true,
