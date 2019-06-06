@@ -25,18 +25,15 @@ const styles = StyleSheet.create({
   },
   layoutIndicator: {
     height: 15,
-    position: 'absolute',
-    bottom: 5,
-    left: 0,
-    right: 0,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: 'transparent',
+    marginTop: 10,
+    marginBottom: 10
   },
   indicator: {
     margin: 3,
-    opacity: 0.9
   },
   indicatorSelected: {
     opacity: 1,
@@ -52,22 +49,23 @@ const styles = StyleSheet.create({
   layoutText: {
     position: 'absolute',
     paddingHorizontal: 15,
-    bottom: 30,
+    height: 120,
+    bottom: 0,
     left: 0,
     right: 0,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flexDirection: 'column',
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   textTitle: {
     fontWeight: 'bold',
-    fontSize: 15, 
+    fontSize: 16,
     color: 'white',
   },
   textCaption: {
     fontWeight: '400',
-    fontSize: 12, 
+    fontSize: 10,
     color: 'white',
   }
 });
@@ -195,8 +193,35 @@ export default class Slideshow extends Component {
             const imageObject = typeof image.url === 'string' ? {uri: image.url} : image.url;
             const textComponent = (
               <View style={styles.layoutText}>
-                {image.title === undefined ? null : <Text style={styles.textTitle}>{image.title}</Text>}
+                {/* SECTION INDICATOR */}
+                <View 
+                  style={[
+                    styles.layoutIndicator, 
+                  ]}>
+                  {this.props.dataSource.map((image, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => { return this._move(index); }}
+                        style={[
+                          [
+                            styles.indicator, 
+                            setIndicatorSize(this.props.indicatorSize), 
+                            setIndicatorColor(this.props.indicatorColor)
+                          ], 
+                          position === index && 
+                          [
+                            styles.indicatorSelected, 
+                            setIndicatorColor(this.props.indicatorSelectedColor)
+                          ]
+                        ]}>
+                      <View></View>
+                    </TouchableOpacity>);
+                  })}
+                </View>
+                {/* END SECTION INDICATOR */}
                 {image.caption === undefined ? null : <Text style={styles.textCaption}>{image.caption}</Text>}
+                {image.title === undefined ? null : <Text style={styles.textTitle}>{image.title}</Text>}
               </View>
             );
             const imageComponent = (
@@ -233,33 +258,6 @@ export default class Slideshow extends Component {
           })}
         </ScrollView>
         {/* END SECTION IMAGE */}
-        {/* SECTION INDICATOR */}
-        <View 
-          style={[
-            styles.layoutIndicator, 
-          ]}>
-          {this.props.dataSource.map((image, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => { return this._move(index); }}
-                style={[
-                  [
-                    styles.indicator, 
-                    setIndicatorSize(this.props.indicatorSize), 
-                    setIndicatorColor(this.props.indicatorColor)
-                  ], 
-                  position === index && 
-                  [
-                    styles.indicatorSelected, 
-                    setIndicatorColor(this.props.indicatorSelectedColor)
-                  ]
-                ]}>
-              <View></View>
-            </TouchableOpacity>);
-          })}
-        </View>
-        {/* END SECTION INDICATOR */}
         {/* SECTION ARROW LEFT */}
         <View 
           style={[
@@ -269,13 +267,6 @@ export default class Slideshow extends Component {
           <TouchableOpacity
             onPress={() => this._prev()}>
             {
-              this.props.arrowRight == undefined ? 
-              <View 
-                style={[
-                  iconArrow(this.props.arrowSize), 
-                  iconArrowLeft(this.props.arrowSize),
-                ]}/>
-              : 
               this.props.arrowLeft
             }
           </TouchableOpacity>
@@ -290,13 +281,6 @@ export default class Slideshow extends Component {
           <TouchableOpacity
             onPress={() => this._next()}>
             {
-              this.props.arrowRight == undefined ? 
-              <View 
-                style={[
-                  iconArrow(this.props.arrowSize), 
-                  iconArrowRight(this.props.arrowSize),
-                ]}/>
-              : 
               this.props.arrowRight
             }
           </TouchableOpacity>
@@ -309,11 +293,11 @@ export default class Slideshow extends Component {
 
 Slideshow.defaultProps = {
   height: 200,
-  indicatorSize: 8,
+  indicatorSize: 70,
   indicatorColor: '#CCCCCC',
   indicatorSelectedColor: '#FFFFFF',
   scrollEnabled: true,
-  arrowSize: 16,
+  arrowSize: 50,
 }
 
 Slideshow.propTypes = {
@@ -340,8 +324,7 @@ Slideshow.propTypes = {
 const setIndicatorSize = function (size) {
   return {
     width: size,
-    height: size,
-    borderRadius: size / 2,
+    height: 2,
   };
 }
 
